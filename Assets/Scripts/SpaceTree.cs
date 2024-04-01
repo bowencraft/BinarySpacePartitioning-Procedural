@@ -286,15 +286,35 @@ public class TreeNode {
 
 
     public void chooseBoundaries() {
-        // YOUR CODE FOR TASK 2 HERE!
-        // Currently, each tree node will take up almost ALL of its available space.
-        // Write code to make this tree node take up a random portion of its available space instead.
-        // Keep in mind that the coordinate (centerX, centerY) should always be within the boundaries. 
-        xStart = spaceMinX + 1;
-        xEnd = spaceMaxX - 1;
-        yStart = spaceMinY + 1;
-        yEnd = spaceMaxY - 1;
+        // Calculate available width and height
+        int availableWidth = spaceMaxX - spaceMinX - 1; // -1 to avoid using the exact boundary
+        int availableHeight = spaceMaxY - spaceMinY - 1; // -1 for the same reason
+
+        // Ensure there's a minimum size to avoid negative or zero width/height
+        int minWidth = Mathf.Min(MIN_SPACE_FOR_SPLIT / 2, availableWidth);
+        int minHeight = Mathf.Min(MIN_SPACE_FOR_SPLIT / 2, availableHeight);
+
+        // Randomly determine the size of the used space ensuring it's at least minWidth x minHeight
+        int usedWidth = Mathf.Max(minWidth, Random.Range(minWidth, availableWidth));
+        int usedHeight = Mathf.Max(minHeight, Random.Range(minHeight, availableHeight));
+
+        // Calculate max start positions to ensure the center is within the boundaries
+        int maxXStart = Mathf.Max(spaceMinX + 1, centerX - usedWidth / 2);
+        int maxYStart = Mathf.Max(spaceMinY + 1, centerY - usedHeight / 2);
+
+        // Ensure the start positions do not go out of the allocated space
+        xStart = Mathf.Min(maxXStart, centerX + 1);
+        yStart = Mathf.Min(maxYStart, centerY + 1);
+
+        // Calculate end positions based on the start positions and used sizes
+        xEnd = Mathf.Min(xStart + usedWidth, spaceMaxX - 1);
+        yEnd = Mathf.Min(yStart + usedHeight, spaceMaxY - 1);
+
+        // Adjust if the size exceeds the allocated space (shouldn't happen with the above calculations)
+        xEnd = Mathf.Clamp(xEnd, xStart, spaceMaxX - 1);
+        yEnd = Mathf.Clamp(yEnd, yStart, spaceMaxY - 1);
     }
+
 
 }
 
