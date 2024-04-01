@@ -251,14 +251,13 @@ public class TreeNode {
         }
         else
         {
-            // If not a leaf, decide randomly whether to attempt splitting the left or right child.
-            // Ensure we only choose a child that can split.
+            
             bool leftCanSplit = leftChild != null && leftChild.canSplit();
             bool rightCanSplit = rightChild != null && rightChild.canSplit();
         
             if (leftCanSplit && rightCanSplit)
             {
-                // Both children can split, choose one at random.
+                
                 if (Random.value < 0.5f)
                 {
                     return leftChild.doRandomSplit() || rightChild.doRandomSplit();
@@ -286,31 +285,31 @@ public class TreeNode {
 
 
     public void chooseBoundaries() {
-        // Calculate available width and height
+        
         int availableWidth = spaceMaxX - spaceMinX - 1; // -1 to avoid using the exact boundary
         int availableHeight = spaceMaxY - spaceMinY - 1; // -1 for the same reason
 
-        // Ensure there's a minimum size to avoid negative or zero width/height
+        
         int minWidth = Mathf.Min(MIN_SPACE_FOR_SPLIT / 2, availableWidth);
         int minHeight = Mathf.Min(MIN_SPACE_FOR_SPLIT / 2, availableHeight);
 
-        // Randomly determine the size of the used space ensuring it's at least minWidth x minHeight
+        
         int usedWidth = Mathf.Max(minWidth, Random.Range(minWidth, availableWidth));
         int usedHeight = Mathf.Max(minHeight, Random.Range(minHeight, availableHeight));
 
-        // Calculate max start positions to ensure the center is within the boundaries
+        
         int maxXStart = Mathf.Max(spaceMinX + 1, centerX - usedWidth / 2);
         int maxYStart = Mathf.Max(spaceMinY + 1, centerY - usedHeight / 2);
 
-        // Ensure the start positions do not go out of the allocated space
+        
         xStart = Mathf.Min(maxXStart, centerX + 1);
         yStart = Mathf.Min(maxYStart, centerY + 1);
 
-        // Calculate end positions based on the start positions and used sizes
+        
         xEnd = Mathf.Min(xStart + usedWidth, spaceMaxX - 1);
         yEnd = Mathf.Min(yStart + usedHeight, spaceMaxY - 1);
 
-        // Adjust if the size exceeds the allocated space (shouldn't happen with the above calculations)
+        
         xEnd = Mathf.Clamp(xEnd, xStart, spaceMaxX - 1);
         yEnd = Mathf.Clamp(yEnd, yStart, spaceMaxY - 1);
     }
